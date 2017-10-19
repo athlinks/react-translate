@@ -21,7 +21,7 @@ export default function translate(displayName, shouldComponentUpdate) {
             previousLocale = locale
           }
           return (
-            <ChildComponent {...this.props} t={t} />
+            <ChildComponent ref={(x) => this.child = x } {...this.props} t={t} />
           )
         }
       }
