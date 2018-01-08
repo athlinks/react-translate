@@ -1,36 +1,33 @@
-import React, { Component } from "react"
-
-import PropTypes from "prop-types"
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export default function translate(displayName, shouldComponentUpdate) {
-  let t
-  let previousLocale = null
-  return (ChildComponent) => {
-
-     class Translator extends Component {
-
-        constructor(props, context) {
-          super(props, context)
-          this.shouldComponentUpdate = shouldComponentUpdate
-        }
-
-        render() {
-          const { translator, locale } = this.context
-          if(locale !== previousLocale) {
-            t = translator(displayName)
-            previousLocale = locale
-          }
-          return (
-            <ChildComponent ref={(x) => this.child = x } {...this.props} t={t} />
-          )
-        }
+  let t;
+  let previousLocale = null;
+  return ChildComponent => {
+    class Translator extends Component {
+      constructor(props, context) {
+        super(props, context);
+        this.shouldComponentUpdate = shouldComponentUpdate;
       }
 
-      Translator.contextTypes = {
-        translator: PropTypes.func.isRequired,
-        locale: PropTypes.string.isRequired,
+      render() {
+        const { translator, locale } = this.context
+        if(locale !== previousLocale) {
+          t = translator(displayName)
+          previousLocale = locale
+        }
+        return (
+          <ChildComponent ref={(x) => this.child = x } {...this.props} t={t} />
+        )
       }
+    }
 
-      return Translator
-  }
+    Translator.contextTypes = {
+      translator: PropTypes.func.isRequired,
+      locale: PropTypes.string.isRequired
+    };
+
+    return Translator;
+  };
 }
