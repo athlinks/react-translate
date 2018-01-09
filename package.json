@@ -19,7 +19,7 @@
     "react": ">=15.0.0 || >=16.0.0"
   },
   "scripts": {
-    "start": "babel src --out-dir lib --ignore='__tests__'",
+    "start": "babel src --out-dir lib --ignore='__tests__' --source-maps",
     "test": "jest"
   },
   "jest": {
