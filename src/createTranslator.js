@@ -1,34 +1,36 @@
-import getPluralType from "./getPluralType"
-import render from "./render"
+import render from "./render";
+import getPluralType from "./getPluralType";
 
-const createTranslator = (keys) => {
-  const pluralType = getPluralType(keys.locale)
-  return (componentName) => {
+const createTranslator = keys => {
+  const pluralType = getPluralType(keys.locale);
+  return componentName => {
     if (!keys.hasOwnProperty(componentName)) {
-      return (key) => `${componentName}.${key}`
+      return key => `${componentName}.${key}`;
     }
-    const componentKeys = keys[componentName]
+    const componentKeys = keys[componentName];
     return (key, params) => {
-      let translation = componentKeys[key]
+      let translation = componentKeys[key];
+
       if (translation === undefined) {
-        return `${componentName}.${key}`
+        return `${componentName}.${key}`;
       }
-      if(Array.isArray(translation)) {
-        // plural
-        if (params != null && typeof params.n === "number") {
-          translation = translation[pluralType(params.n)]
-        }
-        else {
-          return render(translation.join("\n"), params)
-        }
-      }
-      else if (!(/string|number|boolean/).test(typeof translation)) {
+
+      const translationObjType = typeof translation;
+      if ("string" !== translationObjType && "number" !== translationObjType && "boolean" !== translationObjType && !Array.isArray(translation)) {
         // Dictionary of values
         return translation
       }
-      return render(translation, params)
-    }
-  }
-}
+      else if(Array.isArray(translation)) {
+        // plural
+        if (params != null && typeof params.n === "number") {
+          translation = translation[pluralType(params.n)];
+        } else {
+          return render(translation.join("\n"), params);
+        }
+      }
+      return render(translation, params);
+    };
+  };
+};
 
-export default createTranslator
+export default createTranslator;
